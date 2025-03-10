@@ -1,0 +1,21 @@
+version: '3'
+services:
+  veighna-station:
+    image: veighna/veighna:3.9.4
+    container_name: veighna-station
+    volumes:
+      - /mnt/c/veighna/home:/home
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    ports:
+      - "5902:5900"
+    command: |
+      /bin/bash -c '
+        export DISPLAY=:1
+        apt-get update
+        apt-get install -y xvfb x11vnc xauth openbox
+        Xvfb :1 -ac -screen 0 1024x768x16 &
+        x11vnc -ncache_cr -display :1 -forever -shared -bg -noipv6 -nopw &
+        openbox &
+        python3 -m veighna_station
+      '
+    restart: always

@@ -1,0 +1,23 @@
+version: '3'
+name: vnpy-binance
+
+services:
+  binance-gateway:
+    build: .
+    container_name: vnpy-binance
+    environment:
+      - DISPLAY=:2
+      - VNC_PASSWORD=${VNC_PASSWORD:-}
+      - TZ=Asia/Shanghai
+      - PYTHONPATH=/app
+      - QTWEBENGINE_DISABLE_SANDBOX=1
+    volumes:
+      - ./prod:/app/prod
+      - ./run_evo.py:/app/run_evo.py
+      - ./.vntrader:/app/.vntrader
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    ports:
+      - "5906:5900"
+    tty: true
+    stdin_open: true
+    restart: always
